@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -6,19 +7,19 @@ import seaborn as sns
 titanic_data = pd.read_csv('C:/testtitanic/train.csv')
 
 # Visualizando as primeiras linhas do DataFrame
-print(titanic_data.head())
+st.write(titanic_data.head())
 
 # Estatísticas gerais da base
-print("\nEstatísticas Gerais:")
-print(titanic_data.describe())
+st.subheader("Estatísticas Gerais:")
+st.write(titanic_data.describe())
 
 # Contagem de valores para algumas colunas
-print("\nContagem de Valores:")
-print(titanic_data['Sex'].value_counts())
-print(titanic_data['Pclass'].value_counts())
-print(titanic_data['Embarked'].value_counts())
+st.subheader("Contagem de Valores:")
+st.write(titanic_data['Sex'].value_counts())
+st.write(titanic_data['Pclass'].value_counts())
+st.write(titanic_data['Embarked'].value_counts())
 
-# Gráfico de barras para a contagem de sobreviventes
+# Gráfico de barras para a contagem de sobreviventes por classe
 sns.set(style="whitegrid")
 plt.figure(figsize=(12, 6))
 
@@ -48,4 +49,4 @@ sns.histplot(titanic_data['Fare'], kde=True, bins=30, color='green')
 plt.title('Distribuição de Tarifas')
 
 plt.tight_layout()
-plt.show()
+st.pyplot()
