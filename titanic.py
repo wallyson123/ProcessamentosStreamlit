@@ -3,50 +3,50 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Carregando os dados do Titanic
-titanic_data = pd.read_csv('C:/testtitanic/train.csv')
+# Carregar dados do Titanic
+@st.cache
+def load_data():
+    url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
+    data = pd.read_csv(url)
+    return data
 
-# Visualizando as primeiras linhas do DataFrame
-st.write(titanic_data.head())
+# Função para exibir estatísticas gerais
+def show_general_stats(data):
+    st.subheader("Estatísticas Gerais")
+    st.write(f"Total de Passageiros: {len(data)}")
+    st.write(f"Total de Sobreviventes: {data['Survived'].sum()}")
+    st.write(f"Total de Não Sobreviventes: {len(data) - data['Survived'].sum()}")
+    st.write(f"Taxa de Sobrevivência: {data['Survived'].mean() * 100:.2f}%")
 
-# Estatísticas gerais da base
-st.subheader("Estatísticas Gerais:")
-st.write(titanic_data.describe())
+# Função para exibir contagem de valores
+def show_value_counts(data, column):
+    st.subheader(f"Contagem de Valores para {column}")
+    value_counts = data[column].value_counts()
+    st.bar_chart(value_counts)
 
-# Contagem de valores para algumas colunas
-st.subheader("Contagem de Valores:")
-st.write(titanic_data['Sex'].value_counts())
-st.write(titanic_data['Pclass'].value_counts())
-st.write(titanic_data['Embarked'].value_counts())
+# Função para exibir gráfico de barras
+def show_bar_chart(data, x, y, title):
+    st.subheader(title)
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=x, y=y, data=data)
+    st.pyplot()
 
-# Gráfico de barras para a contagem de sobreviventes por classe
-sns.set(style="whitegrid")
-plt.figure(figsize=(12, 6))
+def main():
+    st.title("Análise de Dados do Titanic")
+    data = load_data()
 
-# Contagem de sobreviventes por classe
-plt.subplot(2, 3, 1)
-sns.countplot(x='Survived', hue='Pclass', data=titanic_data, palette="Set2")
-plt.title('Contagem de Sobreviventes por Classe')
+    # Sidebar com opções
+    st.sidebar.title("Opções")
+    selected_chart = st.sidebar.selectbox("Escolha o Gráfico", ["Contagem de Sobreviventes", "Idade por Classe"])
 
-# Distribuição de idades
-plt.subplot(2, 3, 2)
-sns.histplot(titanic_data['Age'].dropna(), kde=True, bins=30, color='blue')
-plt.title('Distribuição de Idades')
+    # Exibir estatísticas gerais
+    show_general_stats(data)
 
-# Contagem de sobreviventes por sexo
-plt.subplot(2, 3, 3)
-sns.countplot(x='Survived', hue='Sex', data=titanic_data, palette="Set2")
-plt.title('Contagem de Sobreviventes por Sexo')
+    # Exibir gráfico selecionado
+    if selected_chart == "Contagem de Sobreviventes":
+        show_value_counts(data, "Survived")
+    elif selected_chart == "Idade por Classe":
+        show_bar_chart(data, "Pclass", "Age", "Idade por Classe")
 
-# Contagem de embarques por local
-plt.subplot(2, 3, 4)
-sns.countplot(x='Embarked', data=titanic_data, palette="Set2")
-plt.title('Contagem de Embarques por Local')
-
-# Distribuição de tarifas
-plt.subplot(2, 3, 5)
-sns.histplot(titanic_data['Fare'], kde=True, bins=30, color='green')
-plt.title('Distribuição de Tarifas')
-
-plt.tight_layout()
-st.pyplot()
+if __name__ == "__main__":
+    main()
