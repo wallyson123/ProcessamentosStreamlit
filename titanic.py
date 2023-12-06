@@ -1,5 +1,4 @@
 import streamlit as st
-import seaborn as sns
 
 # Carregar dados do Titanic
 @st.cache(allow_output_mutation=True)
