@@ -1,10 +1,9 @@
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Carregar dados do Titanic
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
     data = pd.read_csv(url)
